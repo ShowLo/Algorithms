@@ -1,4 +1,5 @@
-﻿#include <iostream>
+﻿//不带表头
+#include <iostream>
 using namespace std;
 struct SNode 
 {
