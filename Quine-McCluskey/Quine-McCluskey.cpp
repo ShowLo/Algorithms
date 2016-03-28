@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <vector>
 #include <cmath>
 #include <string>
@@ -6,27 +6,27 @@
 #include <algorithm>
 using namespace std;
 
-//ÔÌº¬ÏîÀà
+//è•´å«é¡¹ç±»
 class Implicant
 {
 public:
-	char *binary_code;                       //¸÷ÏîµÄ¶ş½øÖÆ±àÂë
-	int bitNumber;                           //±äÁ¿Êı
-	int numOf1;                              //¶ş½øÖÆ±àÂëÖĞ"1"µÄ¸öÊı
-	int numOf_;                              //¶ş½øÖÆ±àÂëÖĞ"-"µÄ¸öÊı£¬Îª·½±ãÅÅĞò£¬Êµ¼ÊÉÏÓÃ"*"´úÌæÁË"-"
-	string output_result;                    //×îÖÕµÄÊä³ö½á¹û
+	char *binary_code;                       //å„é¡¹çš„äºŒè¿›åˆ¶ç¼–ç 
+	int bitNumber;                           //å˜é‡æ•°
+	int numOf1;                              //äºŒè¿›åˆ¶ç¼–ç ä¸­"1"çš„ä¸ªæ•°
+	int numOf_;                              //äºŒè¿›åˆ¶ç¼–ç ä¸­"-"çš„ä¸ªæ•°ï¼Œä¸ºæ–¹ä¾¿æ’åºï¼Œå®é™…ä¸Šç”¨"*"ä»£æ›¿äº†"-"
+	string output_result;                    //æœ€ç»ˆçš„è¾“å‡ºç»“æœ
 	Implicant();
 	Implicant(int bitNum);
-	bool combine_whether(Implicant &imp);    //ÅĞ¶ÏÁ½ÏîÊÇ·ñÄÜ·ñºÏ²¢
-	Implicant result_of_combine(Implicant &imp);//ºÏ²¢Á½Ïî
-	bool cover_whether(int num);             //ÅĞ¶ÏÄÜ·ñ¸²¸Ç±àºÅÎªnumµÄÏî
-	bool operator==(Implicant &imp);         //ÖØÔØ==ÔËËã·û
-	Implicant& operator =(Implicant &imp);   //ÖØÔØ=ÔËËã·û
-	friend ostream& operator <<(ostream&, Implicant&);//ÖØÔØ"<<"ÔËËã·û
-	void toString();                         //½«¶ş½øÖÆÂëÓ³ÉäÎª×îĞ¡Ïî±í´ïÊ½
+	bool combine_whether(Implicant &imp);    //åˆ¤æ–­ä¸¤é¡¹æ˜¯å¦èƒ½å¦åˆå¹¶
+	Implicant result_of_combine(Implicant &imp);//åˆå¹¶ä¸¤é¡¹
+	bool cover_whether(int num);             //åˆ¤æ–­èƒ½å¦è¦†ç›–ç¼–å·ä¸ºnumçš„é¡¹
+	bool operator==(Implicant &imp);         //é‡è½½==è¿ç®—ç¬¦
+	Implicant& operator =(Implicant &imp);   //é‡è½½=è¿ç®—ç¬¦
+	friend ostream& operator <<(ostream&, Implicant&);//é‡è½½"<<"è¿ç®—ç¬¦
+	void toString();                         //å°†äºŒè¿›åˆ¶ç æ˜ å°„ä¸ºæœ€å°é¡¹è¡¨è¾¾å¼
 };
 
-//¹¹Ôìº¯Êı¶¨Òå
+//æ„é€ å‡½æ•°å®šä¹‰
 Implicant::Implicant()
 {
 	binary_code = NULL;
@@ -41,67 +41,67 @@ Implicant::Implicant(int bitNum):bitNumber(bitNum)
 	numOf1 = 0;
 	numOf_ = 0;
 }
-//ÅĞ¶ÏÁ½ÏîÊÇ·ñÄÜ½áºÏ
+//åˆ¤æ–­ä¸¤é¡¹æ˜¯å¦èƒ½ç»“åˆ
 bool Implicant::combine_whether(Implicant &imp)
 {
 	if (abs(numOf1 - imp.numOf1) != 1||numOf_!=imp.numOf_)
-		return false;                        //"1"µÄ¸öÊı²»ÊÇÏà²î1»òÕß"-"µÄ¸öÊı²»µÈ
-	int difference_count = 0;                //²»Í¬µÄ¸öÊı
+		return false;                        //"1"çš„ä¸ªæ•°ä¸æ˜¯ç›¸å·®1æˆ–è€…"-"çš„ä¸ªæ•°ä¸ç­‰
+	int difference_count = 0;                //ä¸åŒçš„ä¸ªæ•°
 	for (int i = 0;i < bitNumber;++i)
 	{
-		//Ê×ÏÈ¿¼ÂÇ"-"µÄÎ»ÖÃ²»Ò»ÑùµÄÇé¿ö£¬ÏÈÅÅ³ı
+		//é¦–å…ˆè€ƒè™‘"-"çš„ä½ç½®ä¸ä¸€æ ·çš„æƒ…å†µï¼Œå…ˆæ’é™¤
 		if ((binary_code[i] == '*'&&imp.binary_code[i] != '*') || (binary_code[i] != '*'&&imp.binary_code[i] == '*'))
 			return false;
 		if (binary_code[i] != imp.binary_code[i])
 			++difference_count;
 	}
-	return (difference_count == 1);          //Ö»ÓĞÒ»Î»²»Í¬µÄÊ±ºò·µ»Øtrue
+	return (difference_count == 1);          //åªæœ‰ä¸€ä½ä¸åŒçš„æ—¶å€™è¿”å›true
 }
-//ºÏ²¢Á½Ïî£¬·µ»ØºÏ²¢½á¹û
+//åˆå¹¶ä¸¤é¡¹ï¼Œè¿”å›åˆå¹¶ç»“æœ
 Implicant Implicant::result_of_combine(Implicant &imp)
 {
 	Implicant result;
 	result.binary_code = new char[bitNumber];
 	result.bitNumber = bitNumber;
-	for (int i = 0;i < bitNumber;++i)        //ÏàÍ¬Î»±£Áô£¬²»Í¬Î»»»Îª"-"
+	for (int i = 0;i < bitNumber;++i)        //ç›¸åŒä½ä¿ç•™ï¼Œä¸åŒä½æ¢ä¸º"-"
 	{
 		if (binary_code[i] == imp.binary_code[i])
 			result.binary_code[i] = binary_code[i];
 		else
 			result.binary_code[i] = '*';
 	}
-	if (imp.numOf1 > numOf1)                 //1µÄ¸öÊı¸úºÏ²¢Ç°Á½ÏîÖĞµÄ1¸öÊı½ÏĞ¡ÕßÏàÍ¬
+	if (imp.numOf1 > numOf1)                 //1çš„ä¸ªæ•°è·Ÿåˆå¹¶å‰ä¸¤é¡¹ä¸­çš„1ä¸ªæ•°è¾ƒå°è€…ç›¸åŒ
 		result.numOf1 = numOf1;
 	else
 		result.numOf1 = imp.numOf1;
-	result.numOf_ = numOf_ + 1;              //"-"µÄ¸öÊı¼Ó1
+	result.numOf_ = numOf_ + 1;              //"-"çš„ä¸ªæ•°åŠ 1
 	return result;
 }
-//ÅĞ¶ÏÄÜ·ñ¸²¸Ç±àºÅÎªnumµÄÏî
+//åˆ¤æ–­èƒ½å¦è¦†ç›–ç¼–å·ä¸ºnumçš„é¡¹
 bool Implicant::cover_whether(int num)
 {
 	char *be_covered = new char[bitNumber];
-	for (int i = 0;i < bitNumber;++i)        //¼ÆËã¶ş½øÖÆÂë
+	for (int i = 0;i < bitNumber;++i)        //è®¡ç®—äºŒè¿›åˆ¶ç 
 	{
 		be_covered[bitNumber - i - 1] = int(num % 2) + 48;
 		num = num / 2;
 	}
-	for (int i = 0;i < bitNumber;++i)        //±È½ÏÊÇ·ñÄÜ¸²¸Ç
+	for (int i = 0;i < bitNumber;++i)        //æ¯”è¾ƒæ˜¯å¦èƒ½è¦†ç›–
 		if (be_covered[i] != binary_code[i] && binary_code[i] != '*')
 			return false;
 	return true;
 }
-//ÖØÔØ==ÔËËã·û£¬ÓÃÓÚ±È½ÏÁ½¸ö¶ş½øÖÆÂëÊÇ·ñÒ»Ñù
+//é‡è½½==è¿ç®—ç¬¦ï¼Œç”¨äºæ¯”è¾ƒä¸¤ä¸ªäºŒè¿›åˆ¶ç æ˜¯å¦ä¸€æ ·
 bool Implicant::operator==(Implicant &imp)
 {
 	if (imp.bitNumber == 0 || bitNumber == 0)
 		return false;
-	for (int i = 0;i < bitNumber;++i)         //ÖğÎ»±È½Ï
+	for (int i = 0;i < bitNumber;++i)         //é€ä½æ¯”è¾ƒ
 		if (binary_code[i] != imp.binary_code[i])
 			return false;
 	return true;
 }
-//ÖØÔØ=ÔËËã·û
+//é‡è½½=è¿ç®—ç¬¦
 Implicant& Implicant::operator =(Implicant &imp)
 {
 	for (int i = 0;i < imp.bitNumber;++i)
@@ -111,13 +111,13 @@ Implicant& Implicant::operator =(Implicant &imp)
 	numOf_ = imp.numOf_;
 	return *this;
 }
-//ÖØÔØ"<<"ÔËËã·û
+//é‡è½½"<<"è¿ç®—ç¬¦
 ostream& operator <<(ostream& output, Implicant& imp)
 {
 	output << imp.output_result;
 	return output;
 }
-//¶¨ÒåtoString
+//å®šä¹‰toString
 void Implicant::toString()
 {
 	for (int i = 0;i < bitNumber;++i)
@@ -132,7 +132,7 @@ void Implicant::toString()
 	}
 }
 
-//¼ÆËã±äÁ¿Êı
+//è®¡ç®—å˜é‡æ•°
 int bitNum(int maxNum)
 {
 	int bitNum = 0;
@@ -147,36 +147,36 @@ int bitNum(int maxNum)
 		return bitNum;
 }
 
-//ºÏ²¢º¯Êı£¬½øĞĞÒ»×éºÏ²¢
+//åˆå¹¶å‡½æ•°ï¼Œè¿›è¡Œä¸€ç»„åˆå¹¶
 int combine(Implicant *&imp, int total_num)
 {
-	int room_needed = total_num*(total_num + 1) / 2;  //¼ÆËãËùĞè×î´ó¿Õ¼ä
-	Implicant *next_imp = new Implicant[room_needed]; //´æ·ÅµÃµ½µÄºÏ²¢Ïî¼°²»ÄÜºÏ²¢µÄ±¾Ô­ÔÌº­Ïî
-	bool *cover_whether = new bool[total_num];        //¼ÇÂ¼ÊÇ·ñ±»¸²¸Ç
+	int room_needed = total_num*(total_num + 1) / 2;  //è®¡ç®—æ‰€éœ€æœ€å¤§ç©ºé—´
+	Implicant *next_imp = new Implicant[room_needed]; //å­˜æ”¾å¾—åˆ°çš„åˆå¹¶é¡¹åŠä¸èƒ½åˆå¹¶çš„æœ¬åŸè•´æ¶µé¡¹
+	bool *cover_whether = new bool[total_num];        //è®°å½•æ˜¯å¦è¢«è¦†ç›–
 	for (int i = 0;i < total_num;++i)
 		cover_whether[i] = false;
 	int bitNumber = imp[0].bitNumber;
-	for (int i = 0;i < room_needed;++i)               //³õÊ¼»¯²Ù×÷
+	for (int i = 0;i < room_needed;++i)               //åˆå§‹åŒ–æ“ä½œ
 	{
 		next_imp[i].binary_code = new char[bitNumber];
 		next_imp[i].bitNumber = bitNumber;
 	}
-	int count = 0;                                    //¼ÇÂ¼next_impµÄ³¤¶È
+	int count = 0;                                    //è®°å½•next_impçš„é•¿åº¦
 	for (int i = 0;i < total_num - 1;++i)
 	{
 		for (int j = i + 1;j < total_num;++j)
-			if (imp[i].combine_whether(imp[j]))       //Èç¹û¿ÉÒÔºÏ²¢£¬½«ºÏ²¢½á¹û´æÖÁnext_impÖĞ
+			if (imp[i].combine_whether(imp[j]))       //å¦‚æœå¯ä»¥åˆå¹¶ï¼Œå°†åˆå¹¶ç»“æœå­˜è‡³next_impä¸­
 			{
 				next_imp[count] = imp[i].result_of_combine(imp[j]);
 				++count;
-				cover_whether[i] = true;              //ÖÃºÏ²¢±êÖ¾
+				cover_whether[i] = true;              //ç½®åˆå¹¶æ ‡å¿—
 				cover_whether[j] = true;
 			}
 	}
 	for (int i = 0;i < count - 1;++i)
 	{
 		for (int j = i + 1;j < count;++j)
-			if (next_imp[i] == next_imp[j])           //ºÏ²¢ÏîÒ»Ñù£¬É¾È¥ºóÒ»¸ö²¢½«×îºóÒ»¸öÇ°ÒÆ£¬³¤¶È¼õÒ»
+			if (next_imp[i] == next_imp[j])           //åˆå¹¶é¡¹ä¸€æ ·ï¼Œåˆ å»åä¸€ä¸ªå¹¶å°†æœ€åä¸€ä¸ªå‰ç§»ï¼Œé•¿åº¦å‡ä¸€
 			{
 				--count;
 				next_imp[j] = next_imp[count];
@@ -186,17 +186,17 @@ int combine(Implicant *&imp, int total_num)
 	}
 	for (int i = 0;i < total_num;++i)
 	{
-		if (!cover_whether[i])                        //Î´±»¸²¸ÇµÄ¼ÓÈënext_imp
+		if (!cover_whether[i])                        //æœªè¢«è¦†ç›–çš„åŠ å…¥next_imp
 			next_imp[count++] = imp[i];
 	}
 	delete[] cover_whether;
 	delete[] imp;
-	imp = next_imp;                                   //½«next_imp´«¸ø´«ÈëµÄ²ÎÊı
+	imp = next_imp;                                   //å°†next_impä¼ ç»™ä¼ å…¥çš„å‚æ•°
 	next_imp = NULL;
 	return count;
 }
 
-//ËÑË÷ËùÓĞ±¾Ô­ÔÌº¬Ïî£¬·µ»Ø×îÖÕÏîÊı
+//æœç´¢æ‰€æœ‰æœ¬åŸè•´å«é¡¹ï¼Œè¿”å›æœ€ç»ˆé¡¹æ•°
 int prime_implicant(Implicant *&imp, int Nm, int Nd,int times)
 {
 	int total_num = Nm + Nd;
@@ -205,22 +205,22 @@ int prime_implicant(Implicant *&imp, int Nm, int Nd,int times)
 	return total_num;
 }
 
-//ÅÅĞò¸¨Öúº¯Êı
+//æ’åºè¾…åŠ©å‡½æ•°
 int compare(const void *p1, const void *p2)
 {
 	Implicant *a = (Implicant*)p1;
 	Implicant *b = (Implicant*)p2;
-	return (strcmp(b->binary_code,a->binary_code));//°´A,A'ÎŞAµÄ·½Ê½ÅÅĞò
+	return (strcmp(b->binary_code,a->binary_code));//æŒ‰A,A'æ— Açš„æ–¹å¼æ’åº
 }
 
 int main()
 {
-	int Nq;                                 //²éÑ¯ÊıÄ¿
-	int Nm, Nd;                             //×îĞ¡Ïî¼°ÎŞ¹ØÏîÊıÄ¿
-	int maxNum = 0;                         //×î´ó±àºÅ
+	int Nq;                                 //æŸ¥è¯¢æ•°ç›®
+	int Nm, Nd;                             //æœ€å°é¡¹åŠæ— å…³é¡¹æ•°ç›®
+	int maxNum = 0;                         //æœ€å¤§ç¼–å·
 
-	vector<int> minterm;                    //×îĞ¡Ïî
-	vector<int> dnterm;                     //ÎŞ¹ØÏî
+	vector<int> minterm;                    //æœ€å°é¡¹
+	vector<int> dnterm;                     //æ— å…³é¡¹
 
 	minterm.resize(1024);
 	dnterm.resize(1024);
@@ -228,28 +228,28 @@ int main()
 	cin >> Nq;
 	for (int times = 0;times < Nq;++times)
 	{
-		//Ã¿´Î¿ªÊ¼²éÑ¯Ö®Ç°ÏÈÇå¿Õ»º´æ
+		//æ¯æ¬¡å¼€å§‹æŸ¥è¯¢ä¹‹å‰å…ˆæ¸…ç©ºç¼“å­˜
 		minterm.clear();
 		dnterm.clear();
 
 		cin >> Nm >> Nd;
-		minterm.resize(Nm);                 //ÖØĞÂ·ÖÅä¿Õ¼ä
+		minterm.resize(Nm);                 //é‡æ–°åˆ†é…ç©ºé—´
 		dnterm.resize(Nd);
 
 		for (int i = 0;i < Nm;++i)
 		{
 			cin >> minterm[i];
-			if (minterm[i] > maxNum)        //¼ÇÂ¼×î´ó±àºÅ
+			if (minterm[i] > maxNum)        //è®°å½•æœ€å¤§ç¼–å·
 				maxNum = minterm[i];
 		}
 		for (int i = 0;i < Nd;++i)
 		{
 			cin >> dnterm[i];
-			if (dnterm[i] > maxNum)         //¼ÇÂ¼×î´ó±àºÅ
+			if (dnterm[i] > maxNum)         //è®°å½•æœ€å¤§ç¼–å·
 				maxNum = dnterm[i];
 		}
 
-		//±ß½çÇé¿ö
+		//è¾¹ç•Œæƒ…å†µ
 		if (Nm == 0 && Nd == 0)
 		{
 			cout << 0 << endl;
@@ -269,8 +269,8 @@ int main()
 		Implicant *implicant = new Implicant[Nm + Nd];
 		Implicant *essential_prime = new Implicant[Nm + Nd];
 		Implicant *essential_prime_implicant = new Implicant[Nm + Nd];
-		int bitNumber = bitNum(maxNum);     //¼ÆËã±äÁ¿Êı
-		for (int i = 0;i < Nm;++i)          //¼ÆËã×îĞ¡ÏîµÄ¶ş½øÖÆÂë
+		int bitNumber = bitNum(maxNum);     //è®¡ç®—å˜é‡æ•°
+		for (int i = 0;i < Nm;++i)          //è®¡ç®—æœ€å°é¡¹çš„äºŒè¿›åˆ¶ç 
 		{
 			int num = minterm[i];
 			implicant[i].binary_code = new char[bitNumber];
@@ -281,11 +281,11 @@ int main()
 			{
 				implicant[i].binary_code[bitNumber - j - 1] = int(num % 2) + 48;
 				if (num % 2 == 1)
-					++implicant[i].numOf1;  //ÀÛ¼Æ1µÄ¸öÊı
+					++implicant[i].numOf1;  //ç´¯è®¡1çš„ä¸ªæ•°
 				num = num / 2;
 			}
 		}
-		for (int i = Nm;i < Nm + Nd;++i)    //¼ÆËãÎŞ¹ØÏîµÄ¶ş½øÖÆÂë
+		for (int i = Nm;i < Nm + Nd;++i)    //è®¡ç®—æ— å…³é¡¹çš„äºŒè¿›åˆ¶ç 
 		{
 			int num = dnterm[i - Nm];
 			implicant[i].binary_code = new char[bitNumber];
@@ -296,40 +296,40 @@ int main()
 			{
 				implicant[i].binary_code[bitNumber - j - 1] = int(num % 2) + 48;
 				if (num % 2 == 1)
-					++implicant[i].numOf1;  //ÀÛ¼Æ1µÄ¸öÊı
+					++implicant[i].numOf1;  //ç´¯è®¡1çš„ä¸ªæ•°
 				num = num / 2;
 			}
 		}
 
-		int *cover_times = new int[Nm]();   //¼ÇÂ¼Ã¿¸ö×îĞ¡Ïî±»¸²¸Ç´ÎÊı£¬³õÊ¼»¯Îª0
-		int *cover_term = new int[Nm]();    //¼ÇÂ¼Ã¿¸ö×îĞ¡ÏîµÄ×îºóÒ»¸ö±¾Ô­ÔÌº¬ÏîĞòºÅ
-		bool *cover_whether = new bool[Nm]; //¼ÇÂ¼Ã¿¸ö×îĞ¡ÏîÊÇ·ñÒÑ±»¸²¸Ç
+		int *cover_times = new int[Nm]();   //è®°å½•æ¯ä¸ªæœ€å°é¡¹è¢«è¦†ç›–æ¬¡æ•°ï¼Œåˆå§‹åŒ–ä¸º0
+		int *cover_term = new int[Nm]();    //è®°å½•æ¯ä¸ªæœ€å°é¡¹çš„æœ€åä¸€ä¸ªæœ¬åŸè•´å«é¡¹åºå·
+		bool *cover_whether = new bool[Nm]; //è®°å½•æ¯ä¸ªæœ€å°é¡¹æ˜¯å¦å·²è¢«è¦†ç›–
 		for (int i = 0;i < Nm;++i)
 			cover_whether[i] = false;
-		int count_rest = Nm;                //¼ÇÂ¼ÉĞÎ´±»¸²¸ÇµÄ×îĞ¡ÏîÏîÊı
-		int count_ess_prime = 0;            //¼ÇÂ¼±¾ÖÊ±¾Ô­ÔÌº¬ÏîÏîÊı
-		int count_prime_imp = 0;            //¼ÇÂ¼±¾Ô­ÔÌº¬ÏîÏîÊı
-		//ÏÈÇó×îÖÕ±¾Ô­ÔÌº¬ÏîµÄ¸öÊı
+		int count_rest = Nm;                //è®°å½•å°šæœªè¢«è¦†ç›–çš„æœ€å°é¡¹é¡¹æ•°
+		int count_ess_prime = 0;            //è®°å½•æœ¬è´¨æœ¬åŸè•´å«é¡¹é¡¹æ•°
+		int count_prime_imp = 0;            //è®°å½•æœ¬åŸè•´å«é¡¹é¡¹æ•°
+		//å…ˆæ±‚æœ€ç»ˆæœ¬åŸè•´å«é¡¹çš„ä¸ªæ•°
 		int num = prime_implicant(implicant, Nm, Nd, bitNumber);
-		//ËÑË÷±¾ÖÊ±¾Ô­ÔÌº¬Ïî
+		//æœç´¢æœ¬è´¨æœ¬åŸè•´å«é¡¹
 		for (int i = 0;i < num;++i)
 		{
 			for (int j = 0;j < Nm;++j)
 				if (implicant[i].cover_whether(minterm[j]))
 				{
-					++cover_times[j];       //Ã¿ÕÒµ½Ò»¸öÄÜ±»¸²¸ÇµÄ×îĞ¡ÏîÔò¸²¸Ç´ÎÊı¼ÓÒ»
-					cover_term[j] = i;      //²¢ÇÒ¼ÇÂ¼¸²¸ÇÁËÕâ¸ö×îĞ¡ÏîµÄ±¾Ô­ÔÌº¬Ïî
+					++cover_times[j];       //æ¯æ‰¾åˆ°ä¸€ä¸ªèƒ½è¢«è¦†ç›–çš„æœ€å°é¡¹åˆ™è¦†ç›–æ¬¡æ•°åŠ ä¸€
+					cover_term[j] = i;      //å¹¶ä¸”è®°å½•è¦†ç›–äº†è¿™ä¸ªæœ€å°é¡¹çš„æœ¬åŸè•´å«é¡¹
 				}
 		}
 		for (int i = 0;i < Nm;++i)
 		{
-			if (cover_times[i] == 1)        //Ã¿ÕÒµ½Ò»¸ö±¾ÖÊ±¾Ô­ÔÌº¬Ïî£¬½«Æä´æ½øÔ¤ÏÈ×¼±¸ºÃµÄ¶ÔÏóÈİÆ÷Àï
+			if (cover_times[i] == 1)        //æ¯æ‰¾åˆ°ä¸€ä¸ªæœ¬è´¨æœ¬åŸè•´å«é¡¹ï¼Œå°†å…¶å­˜è¿›é¢„å…ˆå‡†å¤‡å¥½çš„å¯¹è±¡å®¹å™¨é‡Œ
 			{
 				essential_prime[count_ess_prime] = implicant[cover_term[i]];
-				++count_ess_prime;          //±¾ÖÊ±¾Ô­ÔÌº¬ÏîÏîÊı¼ÓÒ»
+				++count_ess_prime;          //æœ¬è´¨æœ¬åŸè•´å«é¡¹é¡¹æ•°åŠ ä¸€
 			}
 		}
-		//É¾³ıÖØ¸´µÄ±¾ÖÊ±¾Ô­ÔÌº¬Ïî
+		//åˆ é™¤é‡å¤çš„æœ¬è´¨æœ¬åŸè•´å«é¡¹
 		for (int i = 0;i < count_ess_prime - 1;++i)
 		{
 			for (int j = i + 1;j < count_ess_prime;++j)
@@ -343,52 +343,52 @@ int main()
 				}
 			}
 		}
-		//±ê¼Ç±¾ÖÊ±¾Ô´ÔÌº¬Ïî¸²¸Çµ½µÄ×îĞ¡Ïî
+		//æ ‡è®°æœ¬è´¨æœ¬æºè•´å«é¡¹è¦†ç›–åˆ°çš„æœ€å°é¡¹
 		for (int i = 0;i < count_ess_prime;++i)
 		{
 			for (int j = 0;j < Nm;++j)
 				if (essential_prime[i].cover_whether(minterm[j]) && cover_whether[j] == false)
 				{
-					cover_whether[j] = true;//ÖÃ¸²¸Ç±êÖ¾
-					--count_rest;           //Î´¸²¸ÇÏîÊı¼õÒ»
+					cover_whether[j] = true;//ç½®è¦†ç›–æ ‡å¿—
+					--count_rest;           //æœªè¦†ç›–é¡¹æ•°å‡ä¸€
 				}
 		}
 
-		int maxNum_cover_minterm = 0;       //¼ÇÂ¼·Ç±¾ÖÊ±¾Ô­ÔÌº¬Ïî×î´ó¸²¸ÇÏîÊı
-		int *num_cover_term = new int[num]; //¼ÇÂ¼·Ç±¾ÖÊ±¾Ô­ÔÌº¬ÏîËùÔÌº¬µÄ×îĞ¡ÏîÏîÊı
+		int maxNum_cover_minterm = 0;       //è®°å½•éæœ¬è´¨æœ¬åŸè•´å«é¡¹æœ€å¤§è¦†ç›–é¡¹æ•°
+		int *num_cover_term = new int[num]; //è®°å½•éæœ¬è´¨æœ¬åŸè•´å«é¡¹æ‰€è•´å«çš„æœ€å°é¡¹é¡¹æ•°
 		for (;count_rest > 0;)
 		{
 			maxNum_cover_minterm = 0;
 			for (int i = 0;i < num;++i)
 			{
 				num_cover_term[i] = 0;
-				for (int j = 0;j < Nm;++j)  //ÅÅ³ı±»±¾ÖÊ±¾Ô­ÔÌº¬Ïî¸²¸ÇµÄ×îĞ¡Ïî
+				for (int j = 0;j < Nm;++j)  //æ’é™¤è¢«æœ¬è´¨æœ¬åŸè•´å«é¡¹è¦†ç›–çš„æœ€å°é¡¹
 				{
 					if (implicant[i].cover_whether(minterm[j]) && cover_whether[j] == false)
-						++num_cover_term[i];//·Ç±¾ÖÊ±¾Ô­ÔÌº¬Ïî¸²¸ÇµÄÏîÊıÀÛ¼Ó1
+						++num_cover_term[i];//éæœ¬è´¨æœ¬åŸè•´å«é¡¹è¦†ç›–çš„é¡¹æ•°ç´¯åŠ 1
 				}
 				if (num_cover_term[i] > maxNum_cover_minterm)
-					maxNum_cover_minterm = num_cover_term[i]; //¸üĞÂ
+					maxNum_cover_minterm = num_cover_term[i]; //æ›´æ–°
 			}
 			for (int i = 0;i < num;++i)
 			{
-				if (num_cover_term[i] == maxNum_cover_minterm)//ÕÒ³ö¸²¸Ç×î¶àÏîµÄ·Ç±¾ÖÊ±¾Ô­ÔÌº¬Ïî
+				if (num_cover_term[i] == maxNum_cover_minterm)//æ‰¾å‡ºè¦†ç›–æœ€å¤šé¡¹çš„éæœ¬è´¨æœ¬åŸè•´å«é¡¹
 				{
-					essential_prime_implicant[count_prime_imp] = implicant[i];//¼ÇÂ¼£¬ÏîÊı¼Ó1
+					essential_prime_implicant[count_prime_imp] = implicant[i];//è®°å½•ï¼Œé¡¹æ•°åŠ 1
 					++count_prime_imp;
 					for (int j = 0;j < Nm;++j)
 					{
 						if (implicant[i].cover_whether(minterm[j]) && cover_whether[j] == false)
 						{
-							cover_whether[j] = true;          //±»Õâ¸ö·Ç±¾ÖÊ±¾Ô­ÔÌº¬Ïî¸²¸ÇµÄ×îĞ¡Ïî¶¼ÖÃ¸²¸Ç±êÖ¾
-							--count_rest;                     //Î´¸²¸ÇµÄ×îĞ¡ÏîÏîÊı¼õÒ»
+							cover_whether[j] = true;          //è¢«è¿™ä¸ªéæœ¬è´¨æœ¬åŸè•´å«é¡¹è¦†ç›–çš„æœ€å°é¡¹éƒ½ç½®è¦†ç›–æ ‡å¿—
+							--count_rest;                     //æœªè¦†ç›–çš„æœ€å°é¡¹é¡¹æ•°å‡ä¸€
 						}
 					}
 					break;
 				}
 			}
 		}
-		//É¾³ıÖØ¸´µÄ·Ç±¾ÖÊ±¾Ô­ÔÌº¬Ïî
+		//åˆ é™¤é‡å¤çš„éæœ¬è´¨æœ¬åŸè•´å«é¡¹
 		for (int i = 0;i < count_prime_imp - 1;++i)
 		{
 			for (int j = i + 1;j < count_prime_imp;++j)
@@ -400,13 +400,13 @@ int main()
 					--j;
 				}
 		}
-		//ÅÅĞò
+		//æ’åº
 		qsort(essential_prime, count_ess_prime, sizeof(essential_prime[0]), compare);
 		qsort(essential_prime_implicant, count_prime_imp, sizeof(essential_prime_implicant[0]), compare);
 
-		//Êä³ö
+		//è¾“å‡º
 		if (times == 0)
-			cout << "³Â¼ÑéÅ 2014011050" << endl;
+			cout << "é™ˆä½³æ¦• 2014011050" << endl;
 
 		for (int i = 0;i < count_ess_prime;++i)
 			essential_prime[i].toString();
