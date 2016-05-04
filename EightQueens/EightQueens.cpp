@@ -1,7 +1,8 @@
 ﻿#include <iostream>
 using namespace std;
+#define N 8                                          //皇后数的最大值
 
-int Site[8];                                         //放置某一行的皇后所处的列数
+int Site[N];                                         //放置某一行的皇后所处的列数
 
 //判断在row+1行放置第row+1个皇后时是否会发生冲突
 bool Valid(int row)
